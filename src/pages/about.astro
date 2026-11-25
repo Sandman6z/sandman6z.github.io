@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="关于我">
+  <section class="page-intro"><p class="eyebrow">ABOUT / 关于我</p><h1>你好，我是<br /><span class="highlight">Sandman Zhang。</span></h1><p class="lede">一个伪全栈工程师不好做啊……</p></section>
+  <div class="about-grid"><section class="prose"><h2>给自己留一个地方。</h2><p>这是我的个人网站。我想在这里记录尝试、分享经验，也展示自己做过的东西。</p><p>比起只留下一个结果，我也想把过程写下来：怎么开始，遇到了什么问题，又是怎么一步步解决的。</p><p>网站会慢慢完善。欢迎来逛逛，也欢迎交流。</p><a class="button primary" href={`mailto:${site.email}`}>给我写封邮件 ↗</a></section><aside class="profile-card"><span class="eyebrow">ELSEWHERE / 其他地方</span>{site.links.map(link => <a href={link.url} target="_blank" rel="noopener noreferrer"><span><strong>{link.name}</strong><small>{link.note}</small></span><span>↗</span></a>)}</aside></div>
+</Base>

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sandman6z.github.io/sitemap.xml

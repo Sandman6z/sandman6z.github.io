@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+interface Props { title?: string; description?: string; }
+const { title, description = site.description } = Astro.props;
+const nav = [{ path: '/', label: '首页' }, { path: '/projects/', label: '项目' }, { path: '/blog/', label: '文章' }, { path: '/about/', label: '关于' }];
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title ? `${title} · ${site.name}` : `${site.name} · 折腾，记录，分享。`}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title || site.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Sandman 的文章" href="/rss.xml" />
+    <script is:inline>
+      try { const t = localStorage.getItem('theme'); document.documentElement.dataset.theme = t === 'dark' || t === 'light' ? t : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="header wrap">
+      <a class="wordmark" href="/" aria-label="Sandman 首页"><span class="logo">s.</span> sandman<span class="wordmark-dot">_</span></a>
+      <nav aria-label="主导航">{nav.map(item => <a href={item.path} aria-current={Astro.url.pathname === item.path ? 'page' : undefined}>{item.label}</a>)}</nav>
+      <button id="theme-toggle" class="theme" type="button" aria-label="切换深浅色主题" aria-pressed="false"><span aria-hidden="true">◐</span></button>
+    </header>
+    <main id="main" class="wrap"><slot /></main>
+    <footer class="footer wrap">
+      <div><a href="/">Sandman<span class="accent">.</span></a><span> 保持好奇，持续更新。</span></div>
+      <div><a href="/rss.xml">RSS</a><a href={`mailto:${site.email}`}>联系我 ↗</a><span>© {new Date().getUTCFullYear()}</span></div>
+    </footer>
+    <script>
+      const button = document.querySelector<HTMLButtonElement>('#theme-toggle');
+      const sync = () => button?.setAttribute('aria-pressed', String(document.documentElement.dataset.theme === 'dark'));
+      sync();
+      button?.addEventListener('click', () => {
+        const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        try { localStorage.setItem('theme', theme); } catch {}
+        sync();
+      });
+    </script>
+  </body>
+</html>
